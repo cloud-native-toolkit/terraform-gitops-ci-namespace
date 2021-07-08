@@ -50,3 +50,9 @@ variable "namespace" {
   type        = string
   description = "The namespace where the application should be deployed"
 }
+
+variable "provision" {
+  type        = bool
+  description = "Flag indicating that the configuration should be applied to the gitops repo"
+  default     = true
+}
