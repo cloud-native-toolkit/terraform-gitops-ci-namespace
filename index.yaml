@@ -1,11 +1,87 @@
 id: github.com/cloud-native-toolkit/terraform-gitops-dev-namespace
-name: ""
+name: gitops-dev-namespace
 type: terraform
-description: ""
+description: Module to configure a namespace for development in a gitops repo
 tags:
-  - tools
-  - devops
+  - namespace
+  - dev
+  - config
 versions:
+  - platforms: []
+    dependencies:
+      - id: gitops
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-tools-gitops.git
+            version: ">= 1.1.0"
+      - id: namespace
+        refs:
+          - source: github.com/cloud-native-toolkit/terraform-gitops-namespace.git
+            version: ">= 1.0.0"
+    variables:
+      - name: config_repo
+        moduleRef:
+          id: gitops
+          output: config_repo
+        type: string
+        description: The repo that contains the argocd configuration
+      - name: config_token
+        moduleRef:
+          id: gitops
+          output: config_token
+        type: string
+        description: The token for the config repo
+      - name: config_paths
+        moduleRef:
+          id: gitops
+          output: config_paths
+        type: |-
+          object({
+              infrastructure = string
+              services       = string
+              applications   = string
+            })
+        description: The paths in the config repo
+      - name: config_projects
+        moduleRef:
+          id: gitops
+          output: config_projects
+        type: |-
+          object({
+              infrastructure = string
+              services       = string
+              applications   = string
+            })
+        description: The ArgoCD projects in the config repo
+      - name: application_repo
+        moduleRef:
+          id: gitops
+          output: application_repo
+        type: string
+        description: The repo that contains the application configuration
+      - name: application_token
+        moduleRef:
+          id: gitops
+          output: application_token
+        type: string
+        description: The token for the application repo
+      - name: application_paths
+        moduleRef:
+          id: gitops
+          output: application_paths
+        type: |-
+          object({
+              infrastructure = string
+              services       = string
+              applications   = string
+            })
+        description: The paths in the application repo
+      - name: namespace
+        moduleRef:
+          id: namespace
+          output: name
+        type: string
+        description: The namespace where the application should be deployed
+    version: v1.0.0
   - platforms:
       - kubernetes
       - ocp3
@@ -27,28 +103,3 @@ versions:
     #          version: ">= 1.6.0"
     variables: []
     version: v0.0.0
-#    - name: cluster_type
-#      moduleRef:
-#        id: cluster
-#        output: type_code
-#    - name: cluster_ingress_hostname
-#      moduleRef:
-#        id: cluster
-#        output: ingress_hostname
-#    - name: cluster_config_file
-#      moduleRef:
-#        id: cluster
-#        output: config_file_path
-#    - name: tls_secret_name
-#      moduleRef:
-#        id: cluster
-#        output: tls_secret_name
-#    - name: releases_namespace
-#      moduleRef:
-#        id: namespace
-#        output: name
-#        discriminator: tools
-#    - name: icon_url
-#      moduleRef:
-#        id: dashboard
-#        output: base_icon_url
