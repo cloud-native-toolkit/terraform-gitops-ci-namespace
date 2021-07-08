@@ -7,7 +7,7 @@ locals {
 
 resource null_resource setup_namespace {
   provisioner "local-exec" {
-    command = "${path.module}/scripts/setup-namespace.sh '${var.application_repo}' '${local.application_repo_path}' '${var.namespace}' ''${var.application_paths["application"]}' '${local.application_branch}'"
+    command = "${path.module}/scripts/setup-namespace.sh '${var.application_repo}' '${local.application_repo_path}' '${var.namespace}' ''${var.application_paths.applications}' '${local.application_branch}'"
 
     environment = {
       TOKEN = var.application_token
