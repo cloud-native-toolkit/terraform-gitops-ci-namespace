@@ -1,31 +1,27 @@
 locals {
   layer = "infrastructure"
-  config_project = var.config_projects[local.layer]
+  layer_config = var.gitops_config[local.layer]
   application_branch = "main"
-  application_repo_path = "${var.application_paths[local.layer]}/namespace/${var.namespace}"
+  config_namespace = "default"
+  yaml_dir = "${path.cwd}/.tmp/dev-namespace"
+  application_base_path = var.gitops_config.applications.payload.path
 }
 
-resource null_resource setup_namespace {
-  count = var.provision ? 1 : 0
-
+resource null_resource create_yaml {
   provisioner "local-exec" {
-    command = "${path.module}/scripts/setup-namespace.sh '${var.application_repo}' '${local.application_repo_path}' '${var.namespace}' '${var.application_paths.applications}' '${local.application_branch}'"
-
-    environment = {
-      TOKEN = var.application_token
-    }
+    command = "${path.module}/scripts/create-yaml.sh '${local.yaml_dir}/namespace/${var.namespace}' '${local.application_base_path}' '${local.application_branch}'"
   }
 }
 
-resource null_resource setup_argocd {
-  count = var.provision ? 1 : 0
-  depends_on = [null_resource.setup_namespace]
+resource null_resource setup_gitops {
+  depends_on = [null_resource.create_yaml]
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/setup-argocd.sh '${var.config_repo}' '${var.config_paths[local.layer]}' '${local.config_project}' '${var.application_repo}' '${var.application_paths[local.layer]}/dashboard' '${var.namespace}' '${local.application_branch}'"
+    command = "${path.module}/scripts/setup-gitops.sh 'gitops-config' '${local.yaml_dir}' 'namespace/${var.namespace}' '${local.application_branch}' '${var.namespace}'"
 
     environment = {
-      TOKEN = var.config_token
+      GIT_CREDENTIALS = jsonencode(var.git_credentials)
+      GITOPS_CONFIG = jsonencode(local.layer_config)
     }
   }
 }
