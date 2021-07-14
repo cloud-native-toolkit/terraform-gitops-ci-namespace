@@ -23,6 +23,8 @@ mkdir -p "${REPO_PATH}"
 
 cp -R "${CONTENT_DIR}/"* "${REPO_PATH}"
 
+find "${REPO_PATH}" -name "*"
+
 git add .
 git commit -m "Adds payload yaml for ${NAME}"
 git push
