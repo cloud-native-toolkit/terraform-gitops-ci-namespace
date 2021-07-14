@@ -27,6 +27,7 @@ while true; do
 
     if [[ $(cat "${SEMAPHORE}") == "${SEMAPHORE_ID}" ]]; then
       echo "Got the semaphore. Setting up gitops repo"
+      cat "${SEMAPHORE}"
       break
     fi
   fi
