@@ -27,6 +27,7 @@ find "${REPO_PATH}" -name "*"
 
 git add .
 git commit -m "Adds payload yaml for ${NAME}"
+git pull --rebase
 git push
 
 cd ..
