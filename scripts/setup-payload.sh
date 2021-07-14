@@ -25,7 +25,7 @@ cp -R "${CONTENT_DIR}/"* "${REPO_PATH}"
 
 find "${REPO_PATH}" -name "*"
 
-BRANCH=$(!git rev-parse --abbrev-ref HEAD)
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 git add .
 git commit -m "Adds payload yaml for ${NAME}"
