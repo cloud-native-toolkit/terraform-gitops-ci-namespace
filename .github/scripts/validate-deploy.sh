@@ -9,7 +9,7 @@ git clone https://${GIT_TOKEN}@${GIT_REPO} .testrepo
 
 cd .testrepo || exit 1
 
-ls -l
+find . -name "*"
 
 cd ..
 rm -rf .testrepo
