@@ -4,9 +4,9 @@ SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
 
 NAME="$1"
 CONTENT_DIR="$2"
-APPLICATION_PATH="$2"
-APPLICATION_BRANCH="$3"
-NAMESPACE="$4"
+APPLICATION_PATH="$3"
+APPLICATION_BRANCH="$4"
+NAMESPACE="$5"
 
 # Install jq if not available
 JQ=$(command -v jq || command -v ./bin/jq)

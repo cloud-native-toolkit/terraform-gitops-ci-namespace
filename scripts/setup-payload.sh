@@ -21,7 +21,7 @@ cd "${REPO_DIR}" || exit 1
 
 mkdir -p "${REPO_PATH}"
 
-cp -R "${CONTENT_DIR}/*" "${REPO_PATH}"
+cp -R "${CONTENT_DIR}/"* "${REPO_PATH}"
 
 git add .
 git commit -m "Adds payload yaml for ${NAME}"

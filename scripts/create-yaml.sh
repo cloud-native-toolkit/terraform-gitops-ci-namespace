@@ -9,8 +9,8 @@ APPLICATION_BRANCH="$3"
 mkdir -p "${REPO_PATH}"
 
 HOST=$(echo "${REPO}" | sed -E "s~([^/]*)/.*~\1~g")
-ORG=$(echo "${REPO}" | sed -E "~[^/]+/(.*)/.*~\1~g")
-GIT_REPO=$(echo "${REPO}" | sed -E "~.*/(.*)~\1~g")
+ORG=$(echo "${REPO}" | sed -E "s~[^/]+/(.*)/.*~\1~g")
+GIT_REPO=$(echo "${REPO}" | sed -E "s~.*/(.*)~\1~g")
 
 cat > "${REPO_PATH}/gitops-config.yaml" <<EOL
 apiVersion: v1
