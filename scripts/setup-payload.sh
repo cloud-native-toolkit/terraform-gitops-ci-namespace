@@ -8,7 +8,7 @@ REPO_PATH="$3"
 NAMESPACE="$4"
 CONTENT_DIR="$5"
 
-REPO_DIR=".tmprepo-payload-${NAMESPACE}"
+REPO_DIR=".tmprepo-payload-${NAMESPACE}-${NAME}"
 
 git config --global user.email "cloudnativetoolkit@gmail.com"
 git config --global user.name "Cloud-Native Toolkit"

@@ -9,7 +9,7 @@ APPLICATION_GIT_PATH="$6"
 NAMESPACE="$7"
 BRANCH="$8"
 
-REPO_DIR=".tmprepo-argocd-${NAMESPACE}"
+REPO_DIR=".tmprepo-argocd-${NAMESPACE}-${NAME}"
 
 git config --global user.email "cloudnativetoolkit@gmail.com"
 git config --global user.name "Cloud-Native Toolkit"
@@ -44,6 +44,8 @@ if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then
   git add .
   git commit -m "Adds argocd config for ${NAME}"
   git push
+else
+  echo "Nothing to commit for argocd config"
 fi
 
 cd ..
