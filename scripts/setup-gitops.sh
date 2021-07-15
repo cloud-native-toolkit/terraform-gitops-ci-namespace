@@ -4,9 +4,9 @@ SCRIPT_DIR=$(cd $(dirname "$0"); pwd -P)
 
 NAME="$1"
 CONTENT_DIR="$2"
-APPLICATION_PATH="$2"
-APPLICATION_BRANCH="$3"
-NAMESPACE="$4"
+APPLICATION_PATH="$3"
+APPLICATION_BRANCH="$4"
+NAMESPACE="$5"
 
 # Install jq if not available
 JQ=$(command -v jq || command -v ./bin/jq)
@@ -27,6 +27,7 @@ while true; do
 
     if [[ $(cat "${SEMAPHORE}") == "${SEMAPHORE_ID}" ]]; then
       echo "Got the semaphore. Setting up gitops repo"
+      cat "${SEMAPHORE}"
       break
     fi
   fi
@@ -47,13 +48,13 @@ PAYLOAD_REPO=$(echo "${GITOPS_CONFIG}" | ${JQ} -r '.payload.repo')
 PAYLOAD_BASE_PATH=$(echo "${GITOPS_CONFIG}" | ${JQ} -r '.payload.path')
 PAYLOAD_PATH="${PAYLOAD_BASE_PATH}/${APPLICATION_PATH}"
 
-PAYLOAD_TOKEN=$(echo "${GIT_CREDENTIALS}" | ${JQ} --arg REPO "${PAYLOAD_REPO}" -r 'select(.repo == $REPO) | .token')
+PAYLOAD_TOKEN=$(echo "${GIT_CREDENTIALS}" | ${JQ} --arg REPO "${PAYLOAD_REPO}" -r '.[] | select(.repo == $REPO) | .token')
 
-CONFIG_REPO=$(echo "${GITOPS_CONFIG}" | ${JQ} -r '.argocd\-config.repo')
-CONFIG_PATH=$(echo "${GITOPS_CONFIG}" | ${JQ} -r '.argocd\-config.path')
-CONFIG_PROJECT=$(echo "${GITOPS_CONFIG}" | ${JQ} -r '.argocd\-config.project')
+CONFIG_REPO=$(echo "${GITOPS_CONFIG}" | ${JQ} -r '."argocd-config".repo')
+CONFIG_PATH=$(echo "${GITOPS_CONFIG}" | ${JQ} -r '."argocd-config".path')
+CONFIG_PROJECT=$(echo "${GITOPS_CONFIG}" | ${JQ} -r '."argocd-config".project')
 
-CONFIG_TOKEN=$(echo "${GIT_CREDENTIALS}" | ${JQ} --arg REPO "${CONFIG_REPO}" -r 'select(.repo == $REPO) | .token')
+CONFIG_TOKEN=$(echo "${GIT_CREDENTIALS}" | ${JQ} --arg REPO "${CONFIG_REPO}" -r '.[] | select(.repo == $REPO) | .token')
 
 echo "Setting up payload gitops"
 TOKEN="${PAYLOAD_TOKEN}" "${SCRIPT_DIR}/setup-payload.sh" "${NAME}" "${PAYLOAD_REPO}" "${PAYLOAD_PATH}" "${NAMESPACE}" "${CONTENT_DIR}"

@@ -11,5 +11,21 @@ cd .testrepo || exit 1
 
 find . -name "*"
 
+NAMESPACE="gitops-dev-namespace"
+
+if [[ ! -f "payload/1-infrastructure/namespace/${NAMESPACE}/gitops-config.yaml" ]]; then
+  echo "Payload missing: payload/1-infrastructure/namespace/${NAMESPACE}/gitops-config.yaml"
+  exit 1
+fi
+
+cat "payload/1-infrastructure/namespace/${NAMESPACE}/gitops-config.yaml"
+
+if [[ ! -f "argocd/1-infrastructure/active/namespace-${NAMESPACE}.yaml" ]]; then
+  echo "Argocd config missing: argocd/1-infrastructure/active/namespace-${NAMESPACE}.yaml"
+  exit 1
+fi
+
+cat "argocd/1-infrastructure/active/namespace-${NAMESPACE}.yaml"
+
 cd ..
 rm -rf .testrepo
