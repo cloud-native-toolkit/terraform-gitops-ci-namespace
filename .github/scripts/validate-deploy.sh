@@ -11,7 +11,7 @@ cd .testrepo || exit 1
 
 find . -name "*"
 
-NAMESPACE="gitops-dev-namespace"
+NAMESPACE="gitops-ci-namespace"
 NAME="ci-config"
 
 if [[ ! -f "payload/1-infrastructure/namespace/${NAMESPACE}/${NAME}/gitops-config.yaml" ]]; then
