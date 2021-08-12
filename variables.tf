@@ -72,3 +72,9 @@ variable "provision" {
   description = "Flag indicating that the configuration should be applied to the gitops repo"
   default     = true
 }
+
+variable "serverName" {
+  type        = string
+  description = "The name of the server"
+  default     = "default"
+}
