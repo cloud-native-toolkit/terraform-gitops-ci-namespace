@@ -13,6 +13,7 @@ find . -name "*"
 
 NAMESPACE="gitops-ci-namespace"
 NAME="ci-config"
+SERVER_NAME="default"
 
 if [[ ! -f "payload/1-infrastructure/namespace/${NAMESPACE}/${NAME}/gitops-config.yaml" ]]; then
   echo "Payload missing: payload/1-infrastructure/namespace/${NAMESPACE}/${NAME}/gitops-config.yaml"
