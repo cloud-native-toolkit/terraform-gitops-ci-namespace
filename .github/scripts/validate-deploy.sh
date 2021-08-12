@@ -11,21 +11,30 @@ cd .testrepo || exit 1
 
 find . -name "*"
 
-NAMESPACE="gitops-dev-namespace"
+NAMESPACE="gitops-ci-namespace"
+NAME="ci-config"
+SERVER_NAME="default"
 
-if [[ ! -f "payload/1-infrastructure/namespace/${NAMESPACE}/gitops-config.yaml" ]]; then
-  echo "Payload missing: payload/1-infrastructure/namespace/${NAMESPACE}/gitops-config.yaml"
+if [[ ! -f "payload/1-infrastructure/namespace/${NAMESPACE}/${NAME}/gitops-config.yaml" ]]; then
+  echo "Payload missing: payload/1-infrastructure/namespace/${NAMESPACE}/${NAME}/gitops-config.yaml"
   exit 1
 fi
 
-cat "payload/1-infrastructure/namespace/${NAMESPACE}/gitops-config.yaml"
+cat "payload/1-infrastructure/namespace/${NAMESPACE}/${NAME}/gitops-config.yaml"
 
-if [[ ! -f "argocd/1-infrastructure/active/namespace-${NAMESPACE}.yaml" ]]; then
-  echo "Argocd config missing: argocd/1-infrastructure/active/namespace-${NAMESPACE}.yaml"
+if [[ ! -f "argocd/1-infrastructure/cluster/${SERVER_NAME}/base/${NAMESPACE}-${NAME}.yaml" ]]; then
+  echo "Argocd config missing: argocd/1-infrastructure/cluster/${SERVER_NAME}/base/${NAMESPACE}-${NAME}.yaml"
   exit 1
 fi
 
-cat "argocd/1-infrastructure/active/namespace-${NAMESPACE}.yaml"
+cat "argocd/1-infrastructure/cluster/${SERVER_NAME}/base/${NAMESPACE}-${NAME}.yaml"
+
+if [[ ! -f "argocd/1-infrastructure/cluster/${SERVER_NAME}/kustomization.yaml" ]]; then
+  echo "Argocd config missing: argocd/1-infrastructure/cluster/${SERVER_NAME}/kustomization.yaml"
+  exit 1
+fi
+
+cat "argocd/1-infrastructure/cluster/${SERVER_NAME}/kustomization.yaml"
 
 cd ..
 rm -rf .testrepo
