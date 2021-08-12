@@ -32,7 +32,7 @@ resource null_resource setup_gitops {
     command = "$(command -v igc || command -v ${local.bin_dir}/igc) gitops-module '${local.name}' -n '${var.namespace}' --contentDir '${local.yaml_dir}' --serverName '${var.serverName}' -l '${local.layer}'"
 
     environment = {
-      GIT_CREDENTIALS = yamlencode(nonsensitive(var.git_credentials))
+      GIT_CREDENTIALS = yamlencode(var.git_credentials)
       GITOPS_CONFIG   = yamlencode(var.gitops_config)
     }
   }
