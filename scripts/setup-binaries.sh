@@ -28,9 +28,20 @@ if [[ -z "${IGC}" ]]; then
     sleep 10
   done
   touch "${BIN_DIR}/igc.tmp"
+
+  TYPE=$(cat /etc/os-release | grep -E "^ID=" | sed "s/ID=//g")
+  if [[ "${TYPE}" != "alpine" ]]; then
+    TYPE="linux"
+  fi
+
   RELEASE=$(curl -s "https://api.github.com/repos/cloud-native-toolkit/ibm-garage-cloud-cli/releases/latest" | ${JQ} -r '.tag_name')
-  curl -Lo "${BIN_DIR}/igc.tmp" "https://github.com/cloud-native-toolkit/ibm-garage-cloud-cli/releases/download/${RELEASE}/igc-linux"
+  URL="https://github.com/cloud-native-toolkit/ibm-garage-cloud-cli/releases/download/${RELEASE}/igc-${TYPE}"
+  echo "Downloading igc from url: ${URL}"
+  curl -Lo "${BIN_DIR}/igc.tmp" "${URL}"
   chmod +x "${BIN_DIR}/igc.tmp"
   mv "${BIN_DIR}/igc.tmp" "${BIN_DIR}/igc"
   IGC="${BIN_DIR}/igc"
 fi
+
+echo "Installed binaries"
+ls "${BIN_DIR}"
