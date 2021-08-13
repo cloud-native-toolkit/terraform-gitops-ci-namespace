@@ -25,6 +25,10 @@ versions:
       moduleRef:
         id: gitops
         output: git_credentials
+    - name: server_name
+      moduleRef:
+        id: gitops
+        output: server_name
     - name: namespace
       moduleRef:
         id: namespace
