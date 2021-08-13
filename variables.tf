@@ -73,7 +73,7 @@ variable "provision" {
   default     = true
 }
 
-variable "serverName" {
+variable "server_name" {
   type        = string
   description = "The name of the server"
   default     = "default"
