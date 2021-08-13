@@ -2,8 +2,9 @@ locals {
   bin_dir = "${path.cwd}/bin"
   layer = "infrastructure"
   yaml_dir = "${path.cwd}/.tmp/dev-namespace/${var.namespace}"
-  application_branch = "main"
+  application_repo = var.gitops_config.applications.payload.repo
   application_base_path = var.gitops_config.applications.payload.path
+  application_branch = "main"
   name = "ci-config"
 }
 
@@ -21,7 +22,7 @@ resource null_resource create_yaml {
   depends_on = [null_resource.setup_binaries]
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/create-yaml.sh '${local.yaml_dir}' '${local.application_base_path}' '${local.application_branch}'"
+    command = "${path.module}/scripts/create-yaml.sh '${local.yaml_dir}' '${local.application_repo}' '${local.application_base_path}' '${local.application_branch}'"
   }
 }
 
