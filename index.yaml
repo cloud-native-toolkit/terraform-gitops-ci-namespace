@@ -104,7 +104,7 @@ versions:
         description: Flag indicating that the configuration should be applied to the gitops repo
         default: true
         optional: true
-    version: v1.3.3
+    version: v1.4.0
   - platforms: []
     dependencies:
       - id: gitops
