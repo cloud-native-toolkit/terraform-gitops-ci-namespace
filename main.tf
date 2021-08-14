@@ -42,3 +42,14 @@ resource null_resource setup_gitops {
     }
   }
 }
+
+module "pipeline_privileged_scc" {
+  source = "github.com/cloud-native-toolkit/terraform-gitops-sccs.git"
+
+  gitops_config = var.gitops_config
+  git_credentials = var.git_credentials
+  namespace = var.namespace
+  service_account = "pipeline"
+  sccs = var.provision ? ["privileged"] : []
+  server_name = var.server_name
+}
