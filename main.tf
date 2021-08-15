@@ -1,5 +1,5 @@
 locals {
-  bin_dir = "${path.cwd}/bin"
+  bin_dir  = module.setup_clis.bin_dir
   layer = "infrastructure"
   yaml_dir = "${path.cwd}/.tmp/dev-namespace/${var.namespace}"
   application_repo = var.gitops_config.applications.payload.repo
@@ -8,20 +8,11 @@ locals {
   name = "ci-config"
 }
 
-resource null_resource setup_binaries {
-  count = var.provision ? 1 : 0
-
-  provisioner "local-exec" {
-    command = "${path.module}/scripts/setup-binaries.sh"
-
-    environment = {
-      BIN_DIR = local.bin_dir
-    }
-  }
+module setup_clis {
+  source = "github.com/cloud-native-toolkit/terraform-util-clis.git"
 }
 
 resource null_resource create_yaml {
-  depends_on = [null_resource.setup_binaries]
   count = var.provision ? 1 : 0
 
   provisioner "local-exec" {
@@ -34,7 +25,7 @@ resource null_resource setup_gitops {
   count = var.provision ? 1 : 0
 
   provisioner "local-exec" {
-    command = "$(command -v igc || command -v ${local.bin_dir}/igc) gitops-module '${local.name}' -n '${var.namespace}' --contentDir '${local.yaml_dir}' --serverName '${var.server_name}' -l '${local.layer}'"
+    command = "${local.bin_dir}/igc gitops-module '${local.name}' -n '${var.namespace}' --contentDir '${local.yaml_dir}' --serverName '${var.server_name}' -l '${local.layer}'"
 
     environment = {
       GIT_CREDENTIALS = yamlencode(var.git_credentials)
@@ -44,7 +35,7 @@ resource null_resource setup_gitops {
 }
 
 module "pipeline_privileged_scc" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-sccs.git"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-sccs.git?ref=v1.1.3"
 
   gitops_config = var.gitops_config
   git_credentials = var.git_credentials
