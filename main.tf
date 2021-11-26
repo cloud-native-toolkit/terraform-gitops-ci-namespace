@@ -28,14 +28,14 @@ resource null_resource setup_gitops {
     command = "${local.bin_dir}/igc gitops-module '${local.name}' -n '${var.namespace}' --contentDir '${local.yaml_dir}' --serverName '${var.server_name}' -l '${local.layer}'"
 
     environment = {
-      GIT_CREDENTIALS = yamlencode(var.git_credentials)
+      GIT_CREDENTIALS = nonsensitive(yamlencode(var.git_credentials))
       GITOPS_CONFIG   = yamlencode(var.gitops_config)
     }
   }
 }
 
 module "pipeline_privileged_scc" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-sccs.git?ref=v1.1.4"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-sccs.git?ref=v1.1.5"
 
   gitops_config = var.gitops_config
   git_credentials = var.git_credentials
