@@ -36,7 +36,7 @@ resource gitops_module module {
 }
 
 module "pipeline_privileged_scc" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-sccs.git?ref=provider"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-sccs.git?ref=v1.4.1"
 
   gitops_config = var.gitops_config
   git_credentials = var.git_credentials
