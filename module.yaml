@@ -7,6 +7,9 @@ tags:
     - config
 versions:
 - platforms: []
+  providers:
+    - name: gitops
+      source: "cloud-native-toolkit/gitops"
   dependencies:
     - id: gitops
       refs:

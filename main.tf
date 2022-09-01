@@ -6,6 +6,7 @@ locals {
   application_base_path = var.gitops_config.applications.payload.path
   application_branch = "main"
   name = "ci-config"
+  type = "base"
 }
 
 module setup_clis {
@@ -20,44 +21,22 @@ resource null_resource create_yaml {
   }
 }
 
-resource null_resource setup_gitops {
+resource gitops_module module {
   depends_on = [null_resource.create_yaml]
   count = var.provision ? 1 : 0
 
-  triggers = {
-    name = local.name
-    namespace = var.namespace
-    yaml_dir = local.yaml_dir
-    server_name = var.server_name
-    layer = local.layer
-    git_credentials = yamlencode(var.git_credentials)
-    gitops_config   = yamlencode(var.gitops_config)
-    bin_dir = local.bin_dir
-  }
-
-  provisioner "local-exec" {
-    command = "${self.triggers.bin_dir}/igc gitops-module '${self.triggers.name}' -n '${self.triggers.namespace}' --contentDir '${self.triggers.yaml_dir}' --serverName '${self.triggers.server_name}' -l '${self.triggers.layer}'"
-
-    environment = {
-      GIT_CREDENTIALS = nonsensitive(self.triggers.git_credentials)
-      GITOPS_CONFIG   = self.triggers.gitops_config
-    }
-  }
-
-  provisioner "local-exec" {
-    when = destroy
-    command = "${self.triggers.bin_dir}/igc gitops-module '${self.triggers.name}' -n '${self.triggers.namespace}' --delete --contentDir '${self.triggers.yaml_dir}' --serverName '${self.triggers.server_name}' -l '${self.triggers.layer}' --debug"
-
-    environment = {
-      GIT_CREDENTIALS = nonsensitive(self.triggers.git_credentials)
-      GITOPS_CONFIG   = self.triggers.gitops_config
-    }
-  }
+  name = local.name
+  namespace = var.namespace
+  content_dir = local.yaml_dir
+  server_name = var.server_name
+  layer = local.layer
+  type = local.type
+  config = yamlencode(var.gitops_config)
+  credentials = yamlencode(var.git_credentials)
 }
 
-
 module "pipeline_privileged_scc" {
-  source = "github.com/cloud-native-toolkit/terraform-gitops-sccs.git?ref=v1.1.6"
+  source = "github.com/cloud-native-toolkit/terraform-gitops-sccs.git?ref=v1.4.1"
 
   gitops_config = var.gitops_config
   git_credentials = var.git_credentials
